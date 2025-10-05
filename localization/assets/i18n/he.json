@@ -169,5 +169,36 @@
   "parameters": "פרמטרים",
   "authentication": "אימות",
   "required": "נדרש",
-  "optional": "אופציונלי"
+  "optional": "אופציונלי",
+  
+  "deactivateUser": "השבת משתמש",
+  "deactivateUserTitle": "השבתת משתמש",
+  "deactivateImmediate": "השבת מיידי",
+  "deactivateScheduled": "תזמן השבתה",
+  "selectDeactivationType": "בחר סוג השבתה",
+  "scheduledDate": "תאריך ושעה מתוזמנים",
+  "scheduledDateRequired": "חובה לבחור תאריך ושעה",
+  "scheduledDateMustBeFuture": "התאריך חייב להיות עתידי",
+  "reason": "סיבה",
+  "reasonPlaceholder": "הזן סיבה להשבתה (אופציונלי)",
+  "reactivateUser": "הפעל משתמש מחדש",
+  "cancelSchedule": "בטל תזמון",
+  
+  "activityHistory": "היסטוריית פעילות",
+  "joinedAt": "הצטרף ב",
+  "leftAt": "עזב ב",
+  "scheduledAt": "מתוזמן ל",
+  "actionType": "סוג פעולה",
+  "performedBy": "בוצע על ידי",
+  "duration": "משך",
+  "days": "ימים",
+  "current": "נוכחי",
+  "noHistory": "אין היסטוריית פעילות",
+  
+  "userStatus": "סטטוס משתמש",
+  "statusActive": "פעיל",
+  "statusInactive": "לא פעיל",
+  "statusScheduledDeactivation": "מתוזמן להשבתה",
+  "daysUntilDeactivation": "ימים עד השבתה",
+  "hoursUntilDeactivation": "שעות עד השבתה"
 }

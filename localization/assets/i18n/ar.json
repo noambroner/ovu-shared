@@ -169,5 +169,36 @@
   "parameters": "المعاملات",
   "authentication": "المصادقة",
   "required": "مطلوب",
-  "optional": "اختياري"
+  "optional": "اختياري",
+  
+  "deactivateUser": "تعطيل المستخدم",
+  "deactivateUserTitle": "تعطيل المستخدم",
+  "deactivateImmediate": "تعطيل فوري",
+  "deactivateScheduled": "جدولة التعطيل",
+  "selectDeactivationType": "اختر نوع التعطيل",
+  "scheduledDate": "التاريخ والوقت المجدول",
+  "scheduledDateRequired": "التاريخ المجدول مطلوب",
+  "scheduledDateMustBeFuture": "يجب أن يكون التاريخ في المستقبل",
+  "reason": "السبب",
+  "reasonPlaceholder": "أدخل سبب التعطيل (اختياري)",
+  "reactivateUser": "إعادة تفعيل المستخدم",
+  "cancelSchedule": "إلغاء الجدول",
+  
+  "activityHistory": "سجل النشاط",
+  "joinedAt": "انضم في",
+  "leftAt": "غادر في",
+  "scheduledAt": "مجدول لـ",
+  "actionType": "نوع الإجراء",
+  "performedBy": "نفذه",
+  "duration": "المدة",
+  "days": "أيام",
+  "current": "الحالي",
+  "noHistory": "لا يوجد سجل نشاط",
+  
+  "userStatus": "حالة المستخدم",
+  "statusActive": "نشط",
+  "statusInactive": "غير نشط",
+  "statusScheduledDeactivation": "مجدول للتعطيل",
+  "daysUntilDeactivation": "أيام حتى التعطيل",
+  "hoursUntilDeactivation": "ساعات حتى التعطيل"
 }

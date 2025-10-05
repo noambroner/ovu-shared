@@ -169,5 +169,36 @@
   "parameters": "Parameters",
   "authentication": "Authentication",
   "required": "Required",
-  "optional": "Optional"
+  "optional": "Optional",
+  
+  "deactivateUser": "Deactivate User",
+  "deactivateUserTitle": "User Deactivation",
+  "deactivateImmediate": "Deactivate Immediately",
+  "deactivateScheduled": "Schedule Deactivation",
+  "selectDeactivationType": "Select deactivation type",
+  "scheduledDate": "Scheduled Date & Time",
+  "scheduledDateRequired": "Scheduled date is required",
+  "scheduledDateMustBeFuture": "Date must be in the future",
+  "reason": "Reason",
+  "reasonPlaceholder": "Enter reason for deactivation (optional)",
+  "reactivateUser": "Reactivate User",
+  "cancelSchedule": "Cancel Schedule",
+  
+  "activityHistory": "Activity History",
+  "joinedAt": "Joined At",
+  "leftAt": "Left At",
+  "scheduledAt": "Scheduled For",
+  "actionType": "Action Type",
+  "performedBy": "Performed By",
+  "duration": "Duration",
+  "days": "days",
+  "current": "Current",
+  "noHistory": "No activity history",
+  
+  "userStatus": "User Status",
+  "statusActive": "Active",
+  "statusInactive": "Inactive",
+  "statusScheduledDeactivation": "Scheduled for Deactivation",
+  "daysUntilDeactivation": "Days until deactivation",
+  "hoursUntilDeactivation": "Hours until deactivation"
 }

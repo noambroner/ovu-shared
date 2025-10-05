@@ -9,3 +9,5 @@ export { APIFunctions } from './APIFunctions';
 export * from './types';
 export { ResetPasswordModal } from './ResetPasswordModal';
 export { AddUserModal } from './AddUserModal';
+export { DeactivateUserModal } from './DeactivateUserModal';
+export { UserActivityHistory } from './UserActivityHistory';

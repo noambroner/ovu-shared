@@ -121,8 +121,6 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
   const [closingMenuId, setClosingMenuId] = useState<number | null>(null);
   const [highlightingUserId, setHighlightingUserId] = useState<number | null>(null);
-  const [updatedFields, setUpdatedFields] = useState<Set<string>>(new Set());
-  const [activeFilterColumns, setActiveFilterColumns] = useState<Set<string>>(new Set());
 
   const t = translations[language] || translations.en;
   const isRTL = language === 'he' || language === 'ar';
@@ -413,10 +411,8 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
 
       {editingUser && (
         <EditUserModal
-          isOpen={true}
           onClose={() => setEditingUser(null)}
-          onSave={async (updatedUser) => {
-            // Handle save
+          onSave={async (_userId: number, _updates: any) => {
             setEditingUser(null);
             await fetchUsers();
           }}
@@ -427,7 +423,6 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
 
       {resetPasswordUserId && (
         <ResetPasswordModal
-          isOpen={true}
           onClose={() => setResetPasswordUserId(null)}
           onReset={async () => {
             setResetPasswordUserId(null);
@@ -439,9 +434,8 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
 
       {showAddModal && (
         <AddUserModal
-          isOpen={true}
           onClose={() => setShowAddModal(false)}
-          onAdd={async () => {
+          onAdd={async (_newUser: any) => {
             setShowAddModal(false);
             await fetchUsers();
           }}

@@ -109,23 +109,17 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortField, setSortField] = useState<SortField>('created_at');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
-  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
+  const [sortField] = useState<SortField>('created_at');
+  const [sortDirection] = useState<SortDirection>('desc');
+  const [columnFilters] = useState<Record<string, string>>({});
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [resetPasswordUserId, setResetPasswordUserId] = useState<number | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [deactivatingUserId, setDeactivatingUserId] = useState<number | null>(null);
   const [viewingHistoryUserId, setViewingHistoryUserId] = useState<number | null>(null);
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
-  const [closingMenuId, setClosingMenuId] = useState<number | null>(null);
-  const [highlightingUserId, setHighlightingUserId] = useState<number | null>(null);
 
   const t = translations[language] || translations.en;
-  const isRTL = language === 'he' || language === 'ar';
-
-  useEffect(() => {}, [openMenuId, closingMenuId, menuPosition]);
+  const isRTL = language === 'he';
 
   useEffect(() => {
     fetchUsers();
@@ -424,10 +418,11 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
       {resetPasswordUserId && (
         <ResetPasswordModal
           onClose={() => setResetPasswordUserId(null)}
-          onReset={async () => {
+          onReset={async (_userId: number, _newPassword: string) => {
             setResetPasswordUserId(null);
           }}
           userId={resetPasswordUserId}
+          username={users.find(u => u.id === resetPasswordUserId)?.username || ''}
           language={language}
         />
       )}

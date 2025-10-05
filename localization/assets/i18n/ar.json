@@ -144,5 +144,13 @@
   "welcome_message": "مرحبا بك في نظام OVU",
   "login_message": "تسجيل الدخول إلى حسابك",
   "register_message": "إنشاء حساب جديد",
-  "forgot_password_message": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور"
+  "forgot_password_message": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور",
+  
+  "manage": "إدارة",
+  "manage_page": "صفحة الإدارة",
+  "manage_description": "الإدارة العامة للنظام",
+  "system_management": "إدارة النظام",
+  "configuration": "التكوين",
+  "tools": "الأدوات",
+  "logs": "السجلات"
 }

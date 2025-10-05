@@ -1,0 +1,2 @@
+export { ManagePage } from './ManagePage';
+

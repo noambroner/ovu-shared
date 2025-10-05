@@ -144,5 +144,13 @@
   "welcome_message": "Welcome to OVU System",
   "login_message": "Login to your account",
   "register_message": "Create a new account",
-  "forgot_password_message": "Enter your email address and we'll send you a password reset link"
+  "forgot_password_message": "Enter your email address and we'll send you a password reset link",
+  
+  "manage": "Manage",
+  "manage_page": "Manage Page",
+  "manage_description": "General system management",
+  "system_management": "System Management",
+  "configuration": "Configuration",
+  "tools": "Tools",
+  "logs": "Logs"
 }

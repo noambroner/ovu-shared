@@ -144,5 +144,13 @@
   "welcome_message": "ברוך הבא למערכת OVU",
   "login_message": "התחבר לחשבונך",
   "register_message": "צור חשבון חדש",
-  "forgot_password_message": "הזן את כתובת הדוא\"ל שלך ונשלח לך קישור לאיפוס הסיסמה"
+  "forgot_password_message": "הזן את כתובת הדוא\"ל שלך ונשלח לך קישור לאיפוס הסיסמה",
+  
+  "manage": "ניהול",
+  "manage_page": "עמוד ניהול",
+  "manage_description": "ניהול כללי של המערכת",
+  "system_management": "ניהול מערכת",
+  "configuration": "תצורה",
+  "tools": "כלים",
+  "logs": "יומנים"
 }

@@ -152,5 +152,22 @@
   "system_management": "ניהול מערכת",
   "configuration": "תצורה",
   "tools": "כלים",
-  "logs": "יומנים"
+  "logs": "יומנים",
+  
+  "api": "API",
+  "api_documentation": "תיעוד API",
+  "api_ui_endpoints": "UI Endpoints",
+  "api_functions": "פונקציות",
+  "api_description": "תיעוד מלא של ה-API של המערכת",
+  "endpoints": "נקודות קצה",
+  "method": "שיטה",
+  "path": "נתיב",
+  "description": "תיאור",
+  "request": "בקשה",
+  "response": "תגובה",
+  "example": "דוגמה",
+  "parameters": "פרמטרים",
+  "authentication": "אימות",
+  "required": "נדרש",
+  "optional": "אופציונלי"
 }

@@ -152,5 +152,22 @@
   "system_management": "System Management",
   "configuration": "Configuration",
   "tools": "Tools",
-  "logs": "Logs"
+  "logs": "Logs",
+  
+  "api": "API",
+  "api_documentation": "API Documentation",
+  "api_ui_endpoints": "UI Endpoints",
+  "api_functions": "Functions",
+  "api_description": "Complete API documentation for the system",
+  "endpoints": "Endpoints",
+  "method": "Method",
+  "path": "Path",
+  "description": "Description",
+  "request": "Request",
+  "response": "Response",
+  "example": "Example",
+  "parameters": "Parameters",
+  "authentication": "Authentication",
+  "required": "Required",
+  "optional": "Optional"
 }

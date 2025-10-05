@@ -152,5 +152,22 @@
   "system_management": "إدارة النظام",
   "configuration": "التكوين",
   "tools": "الأدوات",
-  "logs": "السجلات"
+  "logs": "السجلات",
+  
+  "api": "API",
+  "api_documentation": "توثيق API",
+  "api_ui_endpoints": "نقاط نهاية UI",
+  "api_functions": "الوظائف",
+  "api_description": "توثيق كامل لـ API للنظام",
+  "endpoints": "نقاط النهاية",
+  "method": "الطريقة",
+  "path": "المسار",
+  "description": "الوصف",
+  "request": "الطلب",
+  "response": "الاستجابة",
+  "example": "مثال",
+  "parameters": "المعاملات",
+  "authentication": "المصادقة",
+  "required": "مطلوب",
+  "optional": "اختياري"
 }

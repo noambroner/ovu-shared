@@ -4,6 +4,8 @@ export { Sidebar } from './Sidebar';
 export { Dashboard } from './Dashboard';
 export { UsersTable } from './UsersTable';
 export { ManagePage } from './ManagePage';
+export { APIUIEndpoints } from './APIUIEndpoints';
+export { APIFunctions } from './APIFunctions';
 export * from './types';
 export { ResetPasswordModal } from './ResetPasswordModal';
 export { AddUserModal } from './AddUserModal';

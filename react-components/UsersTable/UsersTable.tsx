@@ -130,39 +130,21 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
       setLoading(true);
       setError(null);
       
-      // Mock data for now - replace with actual API call
-      const mockUsers: User[] = [
-        {
-          id: 1,
-          username: 'testuser',
-          email: 'test@ovu.co.il',
-          role: 'user',
-          phone: '0528903533',
-          status: 'active',
-          created_at: new Date().toISOString(),
-        },
-        {
-          id: 2,
-          username: 'admin',
-          email: 'admin@datapc.co.il',
-          role: 'admin',
-          phone: '0528903533',
-          status: 'scheduled_deactivation',
-          scheduled_deactivation_at: new Date(Date.now() + 86400000).toISOString(),
-          created_at: new Date(Date.now() - 86400000).toISOString(),
-        },
-        {
-          id: 3,
-          username: 'noam',
-          email: 'noam@datapc.co.il',
-          role: 'admin',
-          phone: '0528903533',
-          status: 'active',
-          created_at: new Date(Date.now() - 172800000).toISOString(),
+      // Fetch users from API
+      const response = await fetch(`${apiEndpoint}/api/v1/users`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-      ];
+      });
       
-      setUsers(mockUsers);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch users: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      setUsers(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {

@@ -332,7 +332,7 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
           </thead>
           <tbody>
             {filteredAndSortedUsers.map((user) => (
-              <tr key={user.id} className={highlightingUserId === user.id ? 'highlight' : ''}>
+              <tr key={user.id}>
                 <td>{user.id}</td>
                 <td><strong>{user.username}</strong></td>
                 <td>{user.email}</td>

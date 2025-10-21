@@ -167,3 +167,10 @@ export const ManagePage = ({ language, theme }: ManagePageProps) => {
   );
 };
 
+
+
+
+
+
+
+

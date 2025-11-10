@@ -19,80 +19,54 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }: SidebarProps) => {
-  // Find which items should be expanded based on current path
-  const getExpandedItemsForPath = (items: MenuItem[], path: string): string[] => {
+  // Find parent items that should be expanded for the current path
+  const getExpandedItemsForPath = useMemo(() => {
     const expanded: string[] = [];
     
-    const findPath = (items: MenuItem[], targetPath: string, parentIds: string[] = []): void => {
+    const findPath = (items: MenuItem[], targetPath: string, parentIds: string[] = []): boolean => {
       for (const item of items) {
         if (item.path === targetPath) {
-          // Found the active item, add all parent IDs to expanded
           expanded.push(...parentIds);
-          return;
+          return true;
         }
-        if (item.subItems) {
-          findPath(item.subItems, targetPath, [...parentIds, item.id]);
+        if (item.subItems && findPath(item.subItems, targetPath, [...parentIds, item.id])) {
+          return true;
         }
       }
+      return false;
     };
     
-    findPath(items, path);
+    findPath(menuItems, currentPath);
     return expanded;
-  };
-  
-  // Check if current path has sub-items (needs sidebar to be open)
-  const hasActiveSubItems = useMemo(() => {
-    return getExpandedItemsForPath(menuItems, currentPath).length > 0;
   }, [menuItems, currentPath]);
+
+  const hasActiveSubItems = getExpandedItemsForPath.length > 0;
   
-  // Load collapsed state from localStorage, but override if we have active sub-items
+  // Sidebar state: always open if current path has sub-items, otherwise use localStorage
   const [collapsed, setCollapsed] = useState(() => {
-    // Check if current path has sub-items
-    const activeSubItems = getExpandedItemsForPath(menuItems, currentPath);
-    // If current path has sub-items, always open sidebar
-    if (activeSubItems.length > 0) {
-      return false;
-    }
-    // Otherwise, load from localStorage
-    const saved = localStorage.getItem('sidebar_collapsed');
-    return saved === 'true';
+    if (hasActiveSubItems) return false;
+    return localStorage.getItem('sidebar_collapsed') === 'true';
   });
-  
-  // Initialize expanded items based on current path
-  const initialExpandedItems = useMemo(() => {
-    return getExpandedItemsForPath(menuItems, currentPath);
-  }, [menuItems, currentPath]);
-  
-  const [expandedItems, setExpandedItems] = useState<string[]>(initialExpandedItems);
-  
-  // Update expanded items when path changes
+
+  const [expandedItems, setExpandedItems] = useState<string[]>(getExpandedItemsForPath);
+
+  // Sync state with current path on mount and when path changes
   useEffect(() => {
-    const newExpanded = getExpandedItemsForPath(menuItems, currentPath);
-    setExpandedItems(newExpanded);
-    
-    // If we have an active path with sub-items, always open sidebar
-    if (newExpanded.length > 0) {
+    setExpandedItems(getExpandedItemsForPath);
+    if (hasActiveSubItems) {
       setCollapsed(false);
-      // Don't save to localStorage when auto-opening for active sub-items
     }
-  }, [currentPath, menuItems]);
+  }, [currentPath, getExpandedItemsForPath, hasActiveSubItems]);
 
   const toggleCollapse = () => {
     const newCollapsed = !collapsed;
     setCollapsed(newCollapsed);
     
-    // Only save to localStorage if we're not in a state where sidebar should be open
-    // (i.e., if there are no active sub-items)
-    if (!hasActiveSubItems) {
-      localStorage.setItem('sidebar_collapsed', String(newCollapsed));
+    // Only persist collapse state if no active sub-items
+    if (hasActiveSubItems) {
+      localStorage.removeItem('sidebar_collapsed');
     } else {
-      // If we're trying to collapse when we have active sub-items, don't save
-      // This ensures sidebar opens on refresh if there are active sub-items
-      if (newCollapsed) {
-        // User manually collapsed, but we won't persist this if there are active sub-items
-        // Remove from localStorage so it opens on refresh
-        localStorage.removeItem('sidebar_collapsed');
-      }
+      localStorage.setItem('sidebar_collapsed', String(newCollapsed));
     }
   };
 

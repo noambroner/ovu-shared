@@ -44,7 +44,23 @@ export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }:
   
   // Sidebar state: always open if current path has sub-items, otherwise use localStorage
   const [collapsed, setCollapsed] = useState(() => {
-    if (hasActiveSubItems) return false;
+    // Calculate inline for initial state
+    const expanded: string[] = [];
+    const findPath = (items: MenuItem[], targetPath: string, parentIds: string[] = []): boolean => {
+      for (const item of items) {
+        if (item.path === targetPath) {
+          expanded.push(...parentIds);
+          return true;
+        }
+        if (item.subItems && findPath(item.subItems, targetPath, [...parentIds, item.id])) {
+          return true;
+        }
+      }
+      return false;
+    };
+    findPath(menuItems, currentPath);
+    
+    if (expanded.length > 0) return false;
     return localStorage.getItem('sidebar_collapsed') === 'true';
   });
 

@@ -19,12 +19,6 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }: SidebarProps) => {
-  // Load collapsed state from localStorage, default to false (open)
-  const [collapsed, setCollapsed] = useState(() => {
-    const saved = localStorage.getItem('sidebar_collapsed');
-    return saved === 'true';
-  });
-  
   // Find which items should be expanded based on current path
   const getExpandedItemsForPath = (items: MenuItem[], path: string): string[] => {
     const expanded: string[] = [];
@@ -46,6 +40,24 @@ export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }:
     return expanded;
   };
   
+  // Check if current path has sub-items (needs sidebar to be open)
+  const hasActiveSubItems = useMemo(() => {
+    return getExpandedItemsForPath(menuItems, currentPath).length > 0;
+  }, [menuItems, currentPath]);
+  
+  // Load collapsed state from localStorage, but override if we have active sub-items
+  const [collapsed, setCollapsed] = useState(() => {
+    // Check if current path has sub-items
+    const activeSubItems = getExpandedItemsForPath(menuItems, currentPath);
+    // If current path has sub-items, always open sidebar
+    if (activeSubItems.length > 0) {
+      return false;
+    }
+    // Otherwise, load from localStorage
+    const saved = localStorage.getItem('sidebar_collapsed');
+    return saved === 'true';
+  });
+  
   // Initialize expanded items based on current path
   const initialExpandedItems = useMemo(() => {
     return getExpandedItemsForPath(menuItems, currentPath);
@@ -58,22 +70,30 @@ export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }:
     const newExpanded = getExpandedItemsForPath(menuItems, currentPath);
     setExpandedItems(newExpanded);
     
-    // If we have an active path with sub-items, ensure sidebar is open
+    // If we have an active path with sub-items, always open sidebar
     if (newExpanded.length > 0) {
-      setCollapsed(prevCollapsed => {
-        if (prevCollapsed) {
-          localStorage.setItem('sidebar_collapsed', 'false');
-          return false;
-        }
-        return prevCollapsed;
-      });
+      setCollapsed(false);
+      // Don't save to localStorage when auto-opening for active sub-items
     }
   }, [currentPath, menuItems]);
 
   const toggleCollapse = () => {
     const newCollapsed = !collapsed;
     setCollapsed(newCollapsed);
-    localStorage.setItem('sidebar_collapsed', String(newCollapsed));
+    
+    // Only save to localStorage if we're not in a state where sidebar should be open
+    // (i.e., if there are no active sub-items)
+    if (!hasActiveSubItems) {
+      localStorage.setItem('sidebar_collapsed', String(newCollapsed));
+    } else {
+      // If we're trying to collapse when we have active sub-items, don't save
+      // This ensures sidebar opens on refresh if there are active sub-items
+      if (newCollapsed) {
+        // User manually collapsed, but we won't persist this if there are active sub-items
+        // Remove from localStorage so it opens on refresh
+        localStorage.removeItem('sidebar_collapsed');
+      }
+    }
   };
 
   const toggleExpand = (itemId: string) => {

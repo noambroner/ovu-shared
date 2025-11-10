@@ -6,6 +6,7 @@ import { ResetPasswordModal } from '../ResetPasswordModal/ResetPasswordModal';
 import { AddUserModal } from '../AddUserModal/AddUserModal';
 import { DeactivateUserModal } from '../DeactivateUserModal/DeactivateUserModal';
 import { UserActivityHistory } from '../UserActivityHistory/UserActivityHistory';
+import axios from 'axios';
 
 interface User {
   id: number;
@@ -121,6 +122,17 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
   const t = translations[language] || translations.en;
   const isRTL = language === 'he';
 
+  // Create axios instance with token
+  const apiClient = useMemo(() => {
+    return axios.create({
+      baseURL: apiEndpoint,
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+  }, [apiEndpoint, token]);
+
   useEffect(() => {
     fetchUsers();
   }, [apiEndpoint, token]);
@@ -131,22 +143,11 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
       setError(null);
       
       // Fetch users from API
-      const response = await fetch(`${apiEndpoint}/api/v1/users`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch users: ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      setUsers(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      const response = await apiClient.get('/api/v1/users');
+      setUsers(response.data.users || response.data || []);
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.detail || err.message || 'Unknown error';
+      setError(`Failed to fetch users: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
@@ -157,23 +158,14 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
     
     try {
       // Call API endpoint
-      const response = await fetch(`${apiEndpoint}/api/v1/users/${deactivatingUserId}/deactivate`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          deactivation_type: type,
-          scheduled_date: scheduledDate?.toISOString(),
-          reason,
-        }),
+      await apiClient.post(`/api/v1/users/${deactivatingUserId}/deactivate`, {
+        deactivation_type: type,
+        scheduled_date: scheduledDate?.toISOString(),
+        reason,
       });
 
-      if (response.ok) {
-        await fetchUsers();
-        setDeactivatingUserId(null);
-      }
+      await fetchUsers();
+      setDeactivatingUserId(null);
     } catch (error) {
       console.error('Failed to deactivate user:', error);
     }
@@ -181,18 +173,11 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
 
   const handleReactivate = async (userId: number) => {
     try {
-      const response = await fetch(`${apiEndpoint}/api/v1/users/${userId}/reactivate`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ reason: 'Reactivated by admin' }),
+      await apiClient.post(`/api/v1/users/${userId}/reactivate`, {
+        reason: 'Reactivated by admin'
       });
 
-      if (response.ok) {
-        await fetchUsers();
-      }
+      await fetchUsers();
     } catch (error) {
       console.error('Failed to reactivate user:', error);
     }
@@ -200,18 +185,11 @@ export const UsersTable = ({ language, apiEndpoint, token }: UsersTableProps) =>
 
   const handleCancelSchedule = async (userId: number) => {
     try {
-      const response = await fetch(`${apiEndpoint}/api/v1/users/${userId}/cancel-schedule`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ reason: 'Cancelled by admin' }),
+      await apiClient.post(`/api/v1/users/${userId}/cancel-schedule`, {
+        reason: 'Cancelled by admin'
       });
 
-      if (response.ok) {
-        await fetchUsers();
-      }
+      await fetchUsers();
     } catch (error) {
       console.error('Failed to cancel schedule:', error);
     }

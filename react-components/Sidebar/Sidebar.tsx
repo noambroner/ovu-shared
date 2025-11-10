@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './Sidebar.css';
 
 interface MenuItem {
@@ -19,10 +19,62 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }: SidebarProps) => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  // Load collapsed state from localStorage, default to false (open)
+  const [collapsed, setCollapsed] = useState(() => {
+    const saved = localStorage.getItem('sidebar_collapsed');
+    return saved === 'true';
+  });
+  
+  // Find which items should be expanded based on current path
+  const getExpandedItemsForPath = (items: MenuItem[], path: string): string[] => {
+    const expanded: string[] = [];
+    
+    const findPath = (items: MenuItem[], targetPath: string, parentIds: string[] = []): void => {
+      for (const item of items) {
+        if (item.path === targetPath) {
+          // Found the active item, add all parent IDs to expanded
+          expanded.push(...parentIds);
+          return;
+        }
+        if (item.subItems) {
+          findPath(item.subItems, targetPath, [...parentIds, item.id]);
+        }
+      }
+    };
+    
+    findPath(items, path);
+    return expanded;
+  };
+  
+  // Initialize expanded items based on current path
+  const initialExpandedItems = useMemo(() => {
+    return getExpandedItemsForPath(menuItems, currentPath);
+  }, [menuItems, currentPath]);
+  
+  const [expandedItems, setExpandedItems] = useState<string[]>(initialExpandedItems);
+  
+  // Update expanded items when path changes
+  useEffect(() => {
+    const newExpanded = getExpandedItemsForPath(menuItems, currentPath);
+    setExpandedItems(newExpanded);
+    
+    // If we have an active path with sub-items, ensure sidebar is open
+    if (newExpanded.length > 0) {
+      setCollapsed(prevCollapsed => {
+        if (prevCollapsed) {
+          localStorage.setItem('sidebar_collapsed', 'false');
+          return false;
+        }
+        return prevCollapsed;
+      });
+    }
+  }, [currentPath, menuItems]);
 
-  const toggleCollapse = () => setCollapsed(!collapsed);
+  const toggleCollapse = () => {
+    const newCollapsed = !collapsed;
+    setCollapsed(newCollapsed);
+    localStorage.setItem('sidebar_collapsed', String(newCollapsed));
+  };
 
   const toggleExpand = (itemId: string) => {
     setExpandedItems(prev =>

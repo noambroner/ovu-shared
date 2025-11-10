@@ -42,35 +42,19 @@ export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }:
 
   const hasActiveSubItems = getExpandedItemsForPath.length > 0;
   
-  // Sidebar state: always open if current path has sub-items, otherwise use localStorage
+  // Sidebar state: always open if current path has sub-items
   const [collapsed, setCollapsed] = useState(() => {
-    // Calculate inline for initial state
-    const expanded: string[] = [];
-    const findPath = (items: MenuItem[], targetPath: string, parentIds: string[] = []): boolean => {
-      for (const item of items) {
-        if (item.path === targetPath) {
-          expanded.push(...parentIds);
-          return true;
-        }
-        if (item.subItems && findPath(item.subItems, targetPath, [...parentIds, item.id])) {
-          return true;
-        }
-      }
-      return false;
-    };
-    findPath(menuItems, currentPath);
-    
-    if (expanded.length > 0) return false;
-    return localStorage.getItem('sidebar_collapsed') === 'true';
+    return !hasActiveSubItems && localStorage.getItem('sidebar_collapsed') === 'true';
   });
 
   const [expandedItems, setExpandedItems] = useState<string[]>(getExpandedItemsForPath);
 
-  // Sync state with current path on mount and when path changes
+  // Sync state with current path - always open sidebar and expand items when path has sub-items
   useEffect(() => {
     setExpandedItems(getExpandedItemsForPath);
     if (hasActiveSubItems) {
       setCollapsed(false);
+      localStorage.removeItem('sidebar_collapsed');
     }
   }, [currentPath, getExpandedItemsForPath, hasActiveSubItems]);
 

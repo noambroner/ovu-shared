@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useMemo } from 'react';
 import './Sidebar.css';
 
 interface MenuItem {
@@ -20,7 +20,7 @@ interface SidebarProps {
 
 export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }: SidebarProps) => {
   // Helper function to find parent items for a path
-  const findExpandedItems = (items: MenuItem[], targetPath: string, parentIds: string[] = []): string[] => {
+  const findExpandedItems = (items: MenuItem[], targetPath: string): string[] => {
     const expanded: string[] = [];
     
     const findPath = (items: MenuItem[], targetPath: string, parentIds: string[] = []): boolean => {
@@ -40,36 +40,42 @@ export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }:
     return expanded;
   };
 
-  // Find parent items that should be expanded for the current path
-  const getExpandedItemsForPath = useMemo(() => {
+  // Calculate expanded items and check if sidebar should be open
+  const expandedItemsForPath = useMemo(() => {
     return findExpandedItems(menuItems, currentPath);
   }, [menuItems, currentPath]);
 
-  const hasActiveSubItems = getExpandedItemsForPath.length > 0;
+  const shouldBeOpen = expandedItemsForPath.length > 0;
   
-  // Sidebar state: always open if current path has sub-items
-  const [collapsed, setCollapsed] = useState(() => {
-    const expanded = findExpandedItems(menuItems, currentPath);
-    return expanded.length === 0 && localStorage.getItem('sidebar_collapsed') === 'true';
-  });
+  // Initialize state - start closed, will be opened by useLayoutEffect if needed
+  const [collapsed, setCollapsed] = useState(true);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
 
-  const [expandedItems, setExpandedItems] = useState<string[]>(getExpandedItemsForPath);
-
-  // Sync state with current path - always open sidebar and expand items when path has sub-items
-  useEffect(() => {
-    setExpandedItems(getExpandedItemsForPath);
-    if (hasActiveSubItems) {
+  // Use useLayoutEffect to set state BEFORE render - ensures sidebar opens immediately
+  useLayoutEffect(() => {
+    setExpandedItems(expandedItemsForPath);
+    if (shouldBeOpen) {
       setCollapsed(false);
+      // Clear localStorage to prevent it from overriding
       localStorage.removeItem('sidebar_collapsed');
+    } else {
+      // Only use localStorage if no sub-items
+      const saved = localStorage.getItem('sidebar_collapsed');
+      if (saved === 'true') {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
     }
-  }, [currentPath, getExpandedItemsForPath, hasActiveSubItems]);
+  }, [currentPath, expandedItemsForPath, shouldBeOpen]);
 
   const toggleCollapse = () => {
     const newCollapsed = !collapsed;
     setCollapsed(newCollapsed);
     
     // Only persist collapse state if no active sub-items
-    if (hasActiveSubItems) {
+    if (shouldBeOpen) {
+      // Don't save if we have active sub-items - sidebar should always be open
       localStorage.removeItem('sidebar_collapsed');
     } else {
       localStorage.setItem('sidebar_collapsed', String(newCollapsed));

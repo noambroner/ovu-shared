@@ -19,8 +19,8 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }: SidebarProps) => {
-  // Find parent items that should be expanded for the current path
-  const getExpandedItemsForPath = useMemo(() => {
+  // Helper function to find parent items for a path
+  const findExpandedItems = (items: MenuItem[], targetPath: string, parentIds: string[] = []): string[] => {
     const expanded: string[] = [];
     
     const findPath = (items: MenuItem[], targetPath: string, parentIds: string[] = []): boolean => {
@@ -36,15 +36,21 @@ export const Sidebar = ({ menuItems, currentPath, language, theme, onNavigate }:
       return false;
     };
     
-    findPath(menuItems, currentPath);
+    findPath(items, targetPath);
     return expanded;
+  };
+
+  // Find parent items that should be expanded for the current path
+  const getExpandedItemsForPath = useMemo(() => {
+    return findExpandedItems(menuItems, currentPath);
   }, [menuItems, currentPath]);
 
   const hasActiveSubItems = getExpandedItemsForPath.length > 0;
   
   // Sidebar state: always open if current path has sub-items
   const [collapsed, setCollapsed] = useState(() => {
-    return !hasActiveSubItems && localStorage.getItem('sidebar_collapsed') === 'true';
+    const expanded = findExpandedItems(menuItems, currentPath);
+    return expanded.length === 0 && localStorage.getItem('sidebar_collapsed') === 'true';
   });
 
   const [expandedItems, setExpandedItems] = useState<string[]>(getExpandedItemsForPath);
